@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scenario Assistant 발표 자료 (참조용)</title>
+  <!-- Google Fonts 로드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* CSS 변수 설정 - 화이트 & 오렌지 테마 */
+    :root {
+      --bg-color: #f9fafb;
+      --card-bg: #ffffff;
+      --card-border: #e5e7eb;
+      --accent-primary: #ff6b00;
+      /* 메인 오렌지 */
+      --accent-secondary: #ea580c;
+      /* 딥 오렌지 */
+      --accent-gradient: linear-gradient(90deg, #ff6b00 0%, #ff9e00 100%);
+      --text-main: #111827;
+      /* 다크 그레이 */
+      --text-sub: #4b5563;
+      /* 미디움 그레이 */
+      --font-outfit: 'Outfit', 'Noto Sans KR', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-outfit);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* 프레젠테이션 컨테이너 */
+    .presentation-container {
+      position: relative;
+      width: 90%;
+      max-width: 1200px;
+      height: 75vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    /* 개별 슬라이드 기본 스타일 (애니메이션 제거) */
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 48px 64px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      display: none;
+      /* 화면에서 완전히 제외 */
+    }
+
+    /* 활성화된 슬라이드 */
+    .slide.active {
+      opacity: 1;
+      display: flex;
+      /* 활성화 시에만 렌더링 */
+    }
+
+    /* 슬라이드 내부 레이아웃 */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #f3f4f6;
+      padding-bottom: 20px;
+    }
+
+    .slide-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-title::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 32px;
+      background: var(--accent-gradient);
+      border-radius: 4px;
+    }
+
+    .slide-number {
+      font-size: 1.1rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      background: #fff7ed;
+      padding: 6px 18px;
+      border-radius: 50px;
+      border: 1px solid #ffedd5;
+    }
+
+    .slide-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 0;
+    }
+
+    .slide-footer {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f3f4f6;
+      padding-top: 15px;
+    }
+
+    /* ── Slide 1: Title Slide ── */
+    .title-slide {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px;
+    }
+
+    .title-slide h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+      color: var(--text-main);
+    }
+
+    .title-slide .badge {
+      display: inline-block;
+      background: #fff7ed;
+      border: 1px solid #ffedd5;
+      color: var(--accent-primary);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .title-slide p.subtitle {
+      font-size: 1.4rem;
+      color: var(--text-sub);
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+
+    .title-slide .team {
+      font-size: 1rem;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
+    /* ── Slide 2: Intent Slide ── */
+    .intent-box {
+      background: #fafafa;
+      border: 1px solid #f3f4f6;
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 10px;
+    }
+
+    .intent-box h3 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      color: var(--accent-secondary);
+    }
+
+    .intent-box p {
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: var(--text-sub);
+    }
+
+    /* ── Slide 3: Features Slide ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: #fafafa;
+      border: 1px solid #f3f4f6;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-card h3 span {
+      color: var(--accent-primary);
+      font-weight: 800;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* ── Slide 4: Logic Slide ── */
+    .logic-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .logic-column h3 {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: var(--accent-secondary);
+      border-left: 4px solid var(--accent-primary);
+      padding-left: 12px;
+    }
+
+    .logic-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #fafafa;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid #f3f4f6;
+    }
+
+    .step-number {
+      background: var(--accent-gradient);
+      color: #fff;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-info h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .step-info p {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    /* ── Slide 5: Development / Fine-tuning Slide ── */
+    .dev-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .dev-card {
+      background: #fafafa;
+      border: 1px solid #f3f4f6;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .dev-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      color: var(--text-main);
+      border-bottom: 2px solid #eaeaea;
+      padding-bottom: 8px;
+    }
+
+    .dev-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .dev-list li {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--text-sub);
+    }
+
+    .dev-list li::before {
+      content: "■";
+      color: var(--accent-primary);
+      font-size: 0.8rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .highlight {
+      color: var(--accent-primary);
+      font-weight: 700;
+    }
+
+    /* 컨트롤러 (하단 네비게이션) */
+    .controls {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      z-index: 20;
+    }
+
+    .btn {
+      background: #ffffff;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 10px 24px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #fff7ed;
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .progress-bar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: var(--accent-primary);
+      width: 24px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 메인 프레젠테이션 영역 -->
+  <div class="presentation-container">
+
+    <!-- Slide 1: 제목 페이지 -->
+    <div class="slide title-slide active" id="slide-1">
+      <div></div>
+      <div>
+        <span class="badge">Local AI & RAG System</span>
+        <h1>시나리오 어시스턴트</h1>
+        <p class="subtitle">로컬 LLM 기반 소설 세계관 자동 추출 및 관리 프로그램</p>
+      </div>
+      <div class="team">
+        <p>C077036 차현민</p>
+        <p style="font-size: 0.85rem; margin-top: 4px; color: var(--text-sub);">로컬 모델, RAG 활용 Web App</p>
+      </div>
+    </div>
+
+    <!-- Slide 2: 제작 의도 -->
+    <div class="slide" id="slide-2">
+      <div class="slide-header">
+        <div class="slide-title">프로그램 제작 의도</div>
+        <div class="slide-number">02 / 06</div>
+      </div>
+      <div class="slide-content">
+        <div class="intent-box">
+          <h3>설정의 일관성을 잃기 쉬운 창작자들을 위해</h3>
+          <p>
+            소설 및 시나리오 작성 프로세스에서, 등장인물의 정보와 플롯의 전개, 배경 장소가 늘어남에 따라 설정의 일관성을 지키는 것은 대단히 어렵습니다.<br><br>
+            본 플랫폼은 창작자가 텍스트 설정을 일일이 기억하고 관리해야 하는 복잡성을 해결하기 위해 제작되었습니다. 로컬 기기 내에서 동작하는 경량화 파인튜닝(SFT) 모델을 탑재하여, <span
+              class="highlight">작품 텍스트만 주입하면 자동으로 사건과 세계관을 관계망 형태로 추출하고, 일관성을 유지하도록 돕는 창작 조력자</span>를 지향합니다.
+          </p>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Scenario Assistant</span>
+        <span>Intent of Development</span>
+      </div>
+    </div>
+
+    <!-- Slide 3: 기능 설명 -->
+    <div class="slide" id="slide-3">
+      <div class="slide-header">
+        <div class="slide-title">핵심 기능 정의</div>
+        <div class="slide-number">03 / 06</div>
+      </div>
+      <div class="slide-content">
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3><span>01.</span> AI 스토리 데이터 추출</h3>
+            <p>시나리오 원문을 붙여넣으면 LLM(설정 모델)이 등장인물, 장소, 핵심 플롯을 규격화된 포맷으로 고정 정밀 추출하고 자동으로 인과관계를 태깅합니다.</p>
+          </div>
+          <div class="feature-card">
+            <h3><span>02.</span> 대화형 세계관 관리 보드</h3>
+            <p>추출된 데이터를 바탕으로, 보드 인터페이스 상에서 캐릭터의 세부 특징을 변경하고 관계 맵을 수정 및 추가할 수 있는 에디터를 제공합니다.</p>
+          </div>
+          <div class="feature-card">
+            <h3><span>03.</span> 세계관 설정 무결성 검사</h3>
+            <p>전체 세계관을 LLM이 상호 크로스 텍스트 분석하여, 모순된 설정이나 시간선 오류, 캐릭터 중복을 선제적으로 찾아 경고합니다.</p>
+          </div>
+          <div class="feature-card">
+            <h3><span>04.</span> GraphRAG 세계관 질의</h3>
+            <p>Microsoft GraphRAG에 기반하여 로컬 벡터 DB(ChromaDB)에 수립된 하이브리드 지식 그래프를 탐색, 세부 질문에 대해 고정밀 정보를 제공합니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Scenario Assistant</span>
+        <span>Key Features</span>
+      </div>
+    </div>
+
+    <!-- Slide 4: 로직 설명 -->
+    <div class="slide" id="slide-4">
+      <div class="slide-header">
+        <div class="slide-title">핵심 기능 로직 및 데이터 흐름</div>
+        <div class="slide-number">04 / 06</div>
+      </div>
+      <div class="slide-content">
+        <div class="logic-container">
+          <div class="logic-column">
+            <h3>데이터 추출 및 병합 로직</h3>
+            <div class="logic-flow">
+              <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-info">
+                  <h4>스토리 텍스트 입력</h4>
+                  <p>사용자 텍스트 입력 및 로컬 AI 추출 요청</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-info">
+                  <h4>SFT 추출 & 릴레이션 매핑</h4>
+                  <p>LLM 로컬 모델의 1차 추출 -> 2차 관계성 LLM 태깅</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-info">
+                  <h4>이름 기반 스마트 머지</h4>
+                  <p>동일 이름 노드 발견 시 덮어쓰지 않고 세부 속성 합병</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="logic-column">
+            <h3>세계관 설정 무결성 검사 로직</h3>
+            <div class="logic-flow">
+              <div class="flow-step">
+                <div class="step-number">1</div>
+                <div class="step-info">
+                  <h4>세계관 데이터 직렬화</h4>
+                  <p>등록된 모든 노드의 속성을 텍스트 요약본으로 축약</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="step-number">2</div>
+                <div class="step-info">
+                  <h4>에이전트 크로스 체크</h4>
+                  <p>인물 상태 vs 플롯 참여 시간대 논리적 충돌 감지</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="step-number">3</div>
+                <div class="step-info">
+                  <h4>오류 판정 및 UI 렌더링</h4>
+                  <p>규격화된 오류 JSON 파싱 후, 경고 카드로 시각화</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Scenario Assistant</span>
+        <span>System Logics</span>
+      </div>
+    </div>
+
+    <!-- Slide 5: 개발 과정 (모델 학습 과정) -->
+    <div class="slide" id="slide-5">
+      <div class="slide-header">
+        <div class="slide-title">모델 학습 및 개발 과정</div>
+        <div class="slide-number">05 / 06</div>
+      </div>
+      <div class="slide-content">
+        <div class="dev-grid">
+          <div class="dev-card">
+            <h3>로컬 SFT 파이프라인 구축</h3>
+            <ul class="dev-list">
+              <li><span class="highlight">대상 모델 검토</span>: Qwen, Gemma, EXAONE, DeepSeek 등 경량 온디바이스 모델 탐색.</li>
+              <li><span class="highlight">정답지 구축</span>: Claude 3.5 Haiku를 활용하여 200개 소설 청크의 구조화 정답 데이터셋 구축.
+              </li>
+              <li><span class="highlight">학습 환경 최적화</span>: LoRA 파라미터 튜닝, VRAM 효율성 극대화를 위한 Target Module 매핑 및 모델 캐시 드라이브
+                경로 최적화.</li>
+            </ul>
+          </div>
+          <div class="dev-card">
+            <h3>학습 대상 모델별 특징 및 평가</h3>
+            <ul class="dev-list">
+              <li><span class="highlight">Qwen</span>: 구조화 능력이 매우 우수하여 SFT 진행 후 JSON 스키마 준수율 100% 및 최고 F1-Score(0.5294)
+                기록.</li>
+              <li><span class="highlight">Gemma</span>: 한국어 문맥 이해가 뛰어나나 JSON 키 혼용 가능성 식별 문제가 있었으나,필터 적용으로 에러율 2.5% 미만으로
+                감소</li>
+              <li><span class="highlight">DeepSeek</span>: 스키마 일관성은 우수하나 추론 필터링 및 결측치 방지를 위한 추가적인 프롬프트 엔지니어링 필요성 확인.
+              </li>
+              <li><span class="highlight">EXAONE</span>: 문맥 묘사는 자연스러우나 온디바이스 환경에서 파라미터 크기 대비 JSON 출력 안정성의 편차 존재.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer">
+        <span>Scenario Assistant</span>
+        <span>Fine-Tuning & Optimization</span>
+      </div>
+    </div>
+
+    <!-- Slide 6: Thank You Slide -->
+    <div class="slide title-slide" id="slide-6" style="background: radial-gradient(circle at center, #fffcf9 0%, #ffffff 100%);">
+      <div></div>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <span class="badge" style="background: #fff7ed; border: 1px solid #ffedd5; color: var(--accent-primary); padding: 8px 20px; border-radius: 50px; font-size: 0.95rem; margin-bottom: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Project Presentation End</span>
+        <h1 style="background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 6rem; font-weight: 800; margin-bottom: 16px; letter-spacing: -3px; line-height: 1;">Thank You!</h1>
+        <p class="subtitle" style="font-size: 1.5rem; color: var(--text-sub); font-weight: 400; margin-top: 10px;">경청해 주셔서 감사합니다 (Q&A)</p>
+      </div>
+      <div class="team" style="border-top: 1px solid #f3f4f6; width: 60%; margin: 0 auto; padding-top: 20px;">
+        <p style="font-size: 1.1rem; color: var(--text-main); font-weight: 600;">시나리오 어시스턴트 프로젝트 발표</p>
+        <p style="font-size: 0.85rem; margin-top: 6px; color: var(--text-sub);">발표자: C077036 차현민</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 네비게이션 컨트롤 -->
+  <div class="controls">
+    <button class="btn" id="prev-btn">이전</button>
+    <div class="progress-bar" id="progress-dots">
+      <div class="dot active" data-slide="0"></div>
+      <div class="dot" data-slide="1"></div>
+      <div class="dot" data-slide="2"></div>
+      <div class="dot" data-slide="3"></div>
+      <div class="dot" data-slide="4"></div>
+      <div class="dot" data-slide="5"></div>
+    </div>
+    <button class="btn" id="next-btn">다음</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      if (index < 0) index = slides.length - 1;
+      if (index >= slides.length) index = 0;
+
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      slides[index].classList.add('active');
+      dots[index].classList.add('active');
+      currentSlide = index;
+    }
+
+    prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+    nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+
+    dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => showSlide(idx));
+    });
+
+    // 키보드 내비게이션 추가 (좌우 방향키, 스페이스바)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        showSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        showSlide(currentSlide - 1);
+      }
+    });
+  </script>
+</body>
+
+</html>

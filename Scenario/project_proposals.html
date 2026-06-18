@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 활용 프로그램 기획 제안서</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-1: #38bdf8;
+            --accent-2: #818cf8;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 4rem 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .title-slide {
+            text-align: center;
+            align-items: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .title-slide h2 {
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-bottom: 3rem;
+        }
+
+        .title-slide p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+        }
+
+        .content-slide header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .content-slide h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent-1);
+        }
+
+        .content-slide h2 span {
+            color: var(--text-main);
+        }
+
+        .content-slide h3.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-top: -1.5rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            width: 100%;
+        }
+
+        .card:hover {
+            border-color: var(--accent-2);
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            color: var(--accent-2);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card ul {
+            list-style-type: none;
+        }
+
+        .card ul li {
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 1.8rem;
+            color: #f8fafc;
+        }
+
+        .card ul li::before {
+            content: "•";
+            color: var(--accent-1);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .card ul li ul {
+            margin-top: 0.5rem;
+        }
+
+        .card ul li ul li {
+            font-size: 1.05rem;
+            color: #cbd5e1;
+            margin-bottom: 0.5rem;
+        }
+
+        .card ul li ul li::before {
+            content: "-";
+            color: var(--text-muted);
+        }
+
+        .link-text {
+            color: var(--accent-1);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-1);
+            transition: color 0.2s;
+        }
+
+        .link-text:hover {
+            color: var(--accent-2);
+            border-bottom-color: var(--accent-2);
+        }
+
+        .highlight {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        /* Navigation Controls */
+        .controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 3rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+            align-items: center;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-1), var(--accent-2));
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        .slide-counter {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            min-width: 60px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .toc-list {
+            font-size: 1.3rem;
+            line-height: 2;
+        }
+
+        .toc-list span {
+            color: var(--accent-1);
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        /* Table Styles for Conclusion */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+        }
+
+        th,
+        td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            color: var(--accent-1);
+            font-size: 1.1rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="presentation-container" id="presentation">
+
+        <!-- Slide 1: 표지 -->
+        <div class="slide title-slide active">
+            <h1>AI 학습 활용 프로그램 기획 제안서</h1>
+            <h2>LoRA 파인튜닝 & 데이터 기반 4가지 아이디어 제시</h2>
+            <p>2026-1 C077036 차현민</p>
+        </div>
+
+        <!-- Slide 2: 목차 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>Agenda. <span>목차</span></h2>
+            </header>
+            <div class="card">
+                <div class="toc-list">
+                    <div><span>1안.</span> 시나리오 라이팅 서포트 프로그램</div>
+                    <div><span>2안.</span> 판타지 경주 시뮬레이터</div>
+                    <div><span>3안.</span> 레인보우 식스 시즈: 맵 생성기</div>
+                    <div><span>4안.</span> 커뮤니티 유저 평가 수집기</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 4가지 평가 기준 (신규 추가) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>00. <span>아이디어 평가 기준</span></h2>
+            </header>
+            <h3 class="subtitle">각 안은 아래 4가지 요건을 중점 분석하였습니다</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>1. 선정 이유</h3>
+                    <p style="color: #cbd5e1; line-height: 1.6;">과제 선정의 타당성과 배경, 업계 트렌드 및 해결하고자 하는 문제점 점검</p>
+                </div>
+                <div class="card">
+                    <h3>2. 구현 검증</h3>
+                    <p style="color: #cbd5e1; line-height: 1.6;">학습 목표 달성을 위한 구체적인 AI 기술 스택(LLM, ML, RAG, LoRA) 실현 가능성과
+                        세부 아키텍처 제시</p>
+                </div>
+                <div class="card">
+                    <h3>3. 데이터셋</h3>
+                    <p style="color: #cbd5e1; line-height: 1.6;">AI 모델이 학습할 양질의 데이터 확보 가능성, 구체적 출처(Kaggle 등) 및 전처리 방향 점검
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>4. 목표</h3>
+                    <p style="color: #cbd5e1; line-height: 1.6;">최종적으로 사용자에게 제공할 프로그램의 형태 및 UI/UX 시나리오 정의</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1안: 시나리오 라이팅 서포트 프로그램 -->
+        <!-- ========================================== -->
+
+        <!-- 1안: 선정 이유 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>1안. <span>시나리오 라이팅 서포트 프로그램</span></h2>
+            </header>
+            <h3 class="subtitle">01. 선정 이유</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>창작의 휴먼 에러 최소화</strong>
+                        <ul>
+                            <li>방대한 세계관 설정과 복잡한 인물 관계 속에서 필연적으로 발생하는 '설정 오류'를 사전에 방지</li>
+                        </ul>
+                    </li>
+                    <li><strong>관계의 시각화 필요성</strong>
+                        <ul>
+                            <li>수백 페이지의 텍스트만으로는 파악하기 힘든 세부 설정을 마인드맵/지식 그래프로 한눈에 파악</li>
+                        </ul>
+                    </li>
+                    <li><strong>시장성 고려</strong>
+                        <ul>
+                            <li>웹소설, 서브컬처 게임 등 스토리텔링 콘텐츠 시장 확대로 인한 강력한 지능형 에디터 보조 툴 수요 존재</li>
+                        </ul>
+                    </li>
+                    <li><strong>레퍼런스 및 기획 배경</strong>
+                        <ul>
+                            <li>특정 상용 레퍼런스를 벤치마킹하기보다는, <strong>지난 학기 진행했던 프로젝트의 연속선상</strong>에서 완성도를 고도화하며 실질적으로 AI와
+                                연동시키는 것이 목적
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 1안: 구현 검증 (AI 모델부) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>1안. <span>시나리오 라이팅 서포트 프로그램</span></h2>
+            </header>
+            <h3 class="subtitle">02-1. 구현 검증 (AI 파이프라인 및 데이터 추출)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>핵심 기술: 개체명 인식(NER) 및 관계 추출(RE)</strong>
+                        <ul>
+                            <li>Transformer 기반의 언어 모델을 활용해 텍스트 내 엔티티(인물, 장소, 소속)를 분리</li>
+                        </ul>
+                    </li>
+                    <li><strong>특화 LoRA 파인튜닝</strong>
+                        <ul>
+                            <li>단순 언어모델은 복잡한 판타지/무협 용어를 오용할 수 있음.</li>
+                            <li>오픈소스 LLM (Llama-3, Qwen 등)에 특정 장르 데이터를 LoRA로 어댑터 튜닝하여, "A가 B를 배신했다"는 문맥을 정확히 파악하도록 학습
+                            </li>
+                            <li>최종적으로 추출된 관계 데이터를 <strong>정형화된 JSON 포맷</strong>으로 강제 출력 하도록 프롬프트
+                                엔지니어링 수행</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 1안: 구현 검증 (소프트웨어 아키텍처) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>1안. <span>시나리오 라이팅 서포트 프로그램</span></h2>
+            </header>
+            <h3 class="subtitle">02-2. 구현 검증 (소프트웨어 아키텍처 및 시각화)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>백엔드 시스템 구축</strong>
+                        <ul>
+                            <li>Python 기반의 <code>FastAPI</code>를 활용하여 텍스트 입력 시 JSON 관계망을 리턴하는 비동기 API 서버 구축</li>
+                            <li>실시간 처리 과정에서의 병목 현상을 막기 위한 큐(Queue) 시스템 도입 고려</li>
+                        </ul>
+                    </li>
+                    <li><strong>시각화 특화 프론트엔드</strong>
+                        <ul>
+                            <li><strong>React Flow</strong> 혹은 <strong>d3.js</strong> 등 노드 기반 시각화 라이브러리 연동</li>
+                            <li>단순 리스트 나열이 아닌, 사용자가 노드를 드래그 앤 드롭으로 재배치하고 연결선을 직관적으로 확인할 수 있는 인터랙티브 UI 제공</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 1안: 구현 검증 (상용 LLM API 대체) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>1안. <span>시나리오 라이팅 서포트 프로그램</span></h2>
+            </header>
+            <h3 class="subtitle">02-2. 구현 검증 (상용 LLM API 활용 대체 방안)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>직접 모델 학습의 대안</strong>
+                        <ul>
+                            <li>프로젝트의 핵심 목표가 AI 모델 학습 파이프라인(LoRA 등)을 직접 경험하고 구축하는 것이라면 앞선 방식대로 구현해야 합니다.</li>
+                            <li>하지만 <strong>'프로그램 기능의 완성'</strong> 자체에 초점을 둔다면, 훨씬 효율적인 접근법을 선택할 수 있습니다.</li>
+                        </ul>
+                    </li>
+                    <li><strong>최신 LLM(Claude 등)의 API 연동</strong>
+                        <ul>
+                            <li>최근의 강력한 상용 LLM이나 Claude 3.5 모델 등은 이미 방대한 문맥 파악 및 개체 간의 관계 추론 능력을 충분히 학습한 상태입니다.
+                            </li>
+                            <li>따라서 별도의 자체 모델 파인튜닝이나 데이터셋 구축 과정 없이, <strong>정교한 프롬프트 엔지니어링과 API 호출만으로도 요구하는 형태(JSON
+                                    관계도)를 충분히 추출</strong>하고 웹 프론트엔드와 연동할 수 있습니다.(2025-2 실험 수행)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 1안: 데이터셋 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>1안. <span>시나리오 라이팅 서포트 프로그램</span></h2>
+            </header>
+            <h3 class="subtitle">03. 데이터셋 확보 방안 (난이도: 하)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>저작권 프리 데이터 활용</strong>
+                        <ul>
+                            <li>구텐베르크 프로젝트 내 고전 문학 텍스트(영문/국문)를 초기 지도학습(Supervised Fine-Tuning) 데이터 세트로 구축</li>
+                        </ul>
+                    </li>
+                    <li><strong>직접 생성한 데이터 활용</strong>
+                        <ul>
+                            <li>자체적으로 작성한 짧은 시나리오 구문을 관계도 포맷과 1:1로 매핑하여 파인튜닝 학습의 기초(Seed)로 사용</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 1안: 목표 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>1안. <span>시나리오 라이팅 서포트 프로그램</span></h2>
+            </header>
+            <h3 class="subtitle">04. 최종 목표 (UI/UX 시나리오)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>입력 단계:</strong> 웹 기반의 에디터 화면 좌측에 사용자가 대본 혹은 소설 텍스트 뭉치(수천 자 분량)를 복사-붙여넣기 후 '분석' 실행.</li>
+                    <li><strong>시각화 대시보드:</strong> AI 파서를 거친 데이터가 '세계관'별로 정리되어 해당 세계관 데이터에서 '마인드맵 트리'UI를 선택 시 등장인물 간의
+                        관계선(적대, 우호, 가족 등) 표현.</li>
+                    <li><strong>오류 검출 알림:</strong> "A가 B를 살해했다"는 기존 명제가 "이후 A와 B가 함께 식사했다"는 후속 문장과 충돌할 시, 시스템이 모순을 감지하고
+                        하이라이트로 경고를 띄워주는 지능형 프로토타입.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2안: 판타지 경주 시뮬레이터 -->
+        <!-- ========================================== -->
+
+        <!-- 2안: 선정 이유 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>2안. <span>판타지 경주 시뮬레이터</span></h2>
+            </header>
+            <h3 class="subtitle">01. 선정 이유</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>데이터 기반의 설계로 시뮬레이션 장르의 깊이 확보</strong>
+                        <ul>
+                            <li>단순한 난수 발생기(RNG) 의존형 게임을 지양하고, "현존하는 실제 데이터"를 기반으로 엔진에 접목하려는 기획적 시도.</li>
+                        </ul>
+                    </li>
+                    <li><strong>플레이어 몰입감 및 인과성 부여</strong>
+                        <ul>
+                            <li>말을 '그리폰' 같은 판타지 생물로 치환하면서, 생물학적 특징(예: 깃털 방수력, 날개 면적)이 실제 날씨 데이터와 어떻게 상호작용하는지 논리적 인과성을
+                                제공해 유저가 납득할 수 있는 게임 규칙 형성.</li>
+                        </ul>
+                    </li>
+                    <li><strong>개인적인 목표</strong>
+                        <ul>
+                            <li>플레이어의 선택이 준비 -> 실시간의 연속된 선택 -> 결과가 아닌, 준비 -> 결과로 이어지는 시뮬레이션 장르의 게임을 경험해보고 싶은 목적</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2안: 구현 검증 (생물학 이론) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>2안. <span>판타지 경주 시뮬레이터</span></h2>
+            </header>
+            <h3 class="subtitle">02-1. 구현 검증 (학술적 생물학 이론의 변수화)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>현실 생물학 논문의 게임 규칙화</strong>
+                        <ul>
+                            <li>예측을 정교하게 만들기 위해 단순 경마 스탯(근력, 속도, 지구력, 지능) 외에 추가 변수 설계가 필요.</li>
+                        </ul>
+                    </li>
+                    <li><strong><span class="highlight">조류 꼬리샘 연구 활용</span></strong>
+                        <ul>
+                            <li><em>"조류의 미지선에서 분비되는 기름기 성분이 깃털의 방수 효과와 비행 에어로다이나믹스(공기 저항 감소)에 영향을 미친다"</em>는 실제 연구 논문을
+                                게임 시스템에 접목.</li>
+                            <li>이를 통해 '미지선 발달 수치(유분기 정도)'가 높은 교배종은 비 내리는 트랙 환경에서 스피드 디버프를 무효화하는 형태의 정교한 수학적
+                                보정 계수로 알고리즘에 반영.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2안: 구현 검증 (시스템 아키텍처) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>2안. <span>판타지 경주 시뮬레이터</span></h2>
+            </header>
+            <h3 class="subtitle">02-2. 구현 검증 (AI 예측 모델 및 아키텍처)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>회귀 추론(Regression) 파이프라인</strong>
+                        <ul>
+                            <li>수집된 다차원 데이터(기수 스탯, 환경 변수 등) 기반으로 <strong>XGBoost 또는 딥러닝(MLP) 회귀 모델</strong> 학습
+                                (Scikit-learn, PyTorch 활용)</li>
+                            <li>경기 결과 순위 분류(Classification)뿐만 아니라, 예상 도달 시간(Lab time)의 연속적 수치를 예측.</li>
+                        </ul>
+                    </li>
+                    <li><strong>시각화 및 엔진 연동 (게임화)</strong>
+                        <ul>
+                            <li>파이썬 백엔드(FastAPI)에서 해당 회차의 판정 데이터(각 생물의 체크포인트별 속도 곡선)를 <code>JSON Array</code>로 클라이언트에
+                                전송.</li>
+                            <li>동적 시뮬레이터(Unity 3D / WebGL)는 결과값을 받아 트랙상의 생물 애니메이션에 선형 보간(Interpolation)을 줘서 레이싱 연출을 실행.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2안: 데이터셋 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>2안. <span>판타지 경주 시뮬레이터</span></h2>
+            </header>
+            <h3 class="subtitle">03. 데이터셋 확보 방안 (난이도: 중상)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>기반이 되는 경마 대규모 데이터 확보</strong>
+                        <ul>
+                            <li><a href="https://www.kaggle.com/datasets/the-guard/jra-horse-racing-dataset"
+                                    class="link-text" target="_blank">Kaggle JRA (Japan Racing Association) Dataset</a>:
+                                1986년부터 쌓인 방대한 과거 트랙 데이터, 순위, 마체중 변수를 머신러닝 기초 훈련 셋으로 사용</li>
+                            <li><a href="https://www.kaggle.com/" class="link-text" target="_blank">Korea Horse Racing
+                                    (한국마사회 KRA)</a> 등 지역별 데이터를 보충재로 활용.</li>
+                        </ul>
+                    </li>
+                    <li><strong>데이터 튜닝(Feature Engineering)</strong>
+                        <ul>
+                            <li>위의 현실 경마 데이터 속 '말(Horse)'을 '비행 조수(Bird/Griffon)'로 치환하기 위한 추가 칼럼(날개 면적, 꼬리샘 활성도) 파생 변수
+                                생성이 이 프로젝트 구현의 최대 관건.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2안: 목표 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>2안. <span>판타지 경주 시뮬레이터</span></h2>
+            </header>
+            <h3 class="subtitle">04. 최종 목표 (게임 데모)</h3>
+            <div class="card">
+                <ul>
+                    <li>유저가 4~8마리의 육성된 판타지 생물(스탯과 외형이 다름)의 출전 명단을 구성하고, 날씨/풍향/습도를 임의로 조작.</li>
+                    <li>AI의 역할은 실시간 레벨스케일링을 자동화 하는 것. 현재 캐릭터의 능력치와 환경 요소를 기반으로 레이스에 참여할 다른 주자들의 스탯을 생성하는 것.</li>
+                    <li>"Start Game" 버튼을 누르면 정해진 수치와 수식에 따른 결과를 순식간에 계산하고, 브라우저 화면에서 결과에 맞춰 달리는 생물들을 중계하듯 보여주며 레이스를 마친 후
+                        예측
+                        근거(승리 요인)를 함께 출력함.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3안: R6 Map Gen -->
+        <!-- ========================================== -->
+
+        <!-- 3안: 선정 이유 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>3안. <span>레인보우 식스 시즈: 맵 자동 생성</span></h2>
+            </header>
+            <h3 class="subtitle">01. 선정 이유</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>e스포츠 밸런스 해결책 도출</strong>
+                        <ul>
+                            <li>R6 시즈와 같은 전술 FPS에서 벽/바닥의 파괴 및 강화 구조는 프로 리그 전략의 핵심. 공격과 수비의 밸런스가 한쪽으로 쏠리면 게임의 핵심 재미가 사라짐.
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>AI 레벨 디자인의 공학적 접근법 시도</strong>
+                        <ul>
+                            <li>숙련된 레벨 디자이너의 경험과 직관에 100% 의존하던 맵 기획을, '맵의 위치의 킬/데스 로그 및 승률 메타데이터', '데이터를 통한 밸런스 지점 생성'
+                                등의 데이터 기반으로 유의미하게 보조 혹은 생성해낼
+                                수 있는지 컴퓨터공학적으로 증명.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3안: 구현 검증 (생성 모델) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>3안. <span>레인보우 식스 시즈: 맵 자동 생성</span></h2>
+            </header>
+            <h3 class="subtitle">02-1. 구현 검증 (PCG-ML 기반 생성 아키텍처)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>절차적 머신러닝 아키텍처 (PCG-ML)</strong>
+                        <ul>
+                            <li>맵 데이터를 단순 벡터나 3D 오브젝트가 아닌, 평면 탑다운 형태의 '그리드 이미지(Grid Image)' 기반으로 전환하여 다룸.</li>
+                        </ul>
+                    </li>
+                    <li><strong>조건부 이미지 생성망 도입</strong>
+                        <ul>
+                            <li>사용자가 입력한 목표 승률 목표값과 <strong>색상 기반 라벨링 이미지</strong>를 훈련 데이터로 활용.</li>
+                            <li><strong>Pix2Pix (Image-to-Image Translation)</strong> 혹은 <strong>컨트롤넷</strong>을
+                                응용하여, 주어진 조건에 맞춰 방어 구역의 철골벽(빨강), 파괴가능벽(파랑), 바닥재(노랑) 픽셀의 최적 배치 이미지를 합성해냄.</li>
+                            <li>게임 구조상 필수적인 외벽 진입로나 계단 위치 등은 삼각형의 꼭짓점 형태의 핫스팟 위주로 생성.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3안: 구현 검증 (Playability Validation) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>3안. <span>레인보우 식스 시즈: 맵 자동 생성</span></h2>
+            </header>
+            <h3 class="subtitle">02-2. 구현 검증 (<span class="warning">논리적 무결성 - Playability</span>)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>"그럴싸한 쓰레기" 방지 검증 로직</strong>
+                        <ul>
+                            <li>이미지 생성 AI는 픽셀 텍스처를 따라 그릴 뿐, 그곳이 통과 가능한 '문'인지 막힌 '벽'인지 인지하지 못합니다. (환각 현상)</li>
+                        </ul>
+                    </li>
+                    <li><strong>A* (A-Star) 길찾기 알고리즘 교차 검증</strong>
+                        <ul>
+                            <li>AI가 뱉어낸 맵 평면도 이미지를 다시 행렬 구조로 파싱 한 뒤, 스폰 포인트에서 목표 지점까지 길찾기 알고리즘을
+                                돌려봅니다.</li>
+                            <li>만약 완전히 막혀있어 도달 불가능하다면, <strong>해당 결과물을 폐기하고 가중치를 미세 조정하여 다시
+                                    생성</strong> 하는 안전 장치 파이프라인 필수. 특히 방과 방을 통해 모든 공간을 이동할 수 있는지를 확인해야함.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3안: 데이터셋 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>3안. <span>레인보우 식스 시즈: 맵 자동 생성</span></h2>
+            </header>
+            <h3 class="subtitle">03. 데이터셋 확보 방안</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>보유 데이터의 '시맨틱 세그멘테이션' 맵핑</strong>
+                        <ul>
+                            <li>보유 중인 모든 공식 탑뷰 도면 이미지에 **색상 코딩(Color-coding)**을 적용하여 AI가 직관적으로 학습할 수 있도록 전처리
+                            </li>
+                            <li>예: <span style="color:#ef4444">■ 철골벽</span>, <span style="color:#3b82f6">■ 소프트월</span>,
+                                <span style="color:#22c55e">■ 바리케이드/문</span>, <span style="color:#eab308">■ 파괴형
+                                    바닥재</span>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong><span class="highlight">학습 난이도의 획기적 하락</span></strong>
+                        <ul>
+                            <li>일반적인 텍스트 라벨링이 아닌 "색상 블록 이미지 자체"를 정답지로 제공하게 되어, 이미지 생성 AI라서
+                                기하학적 구조 특징을 훨씬 정확하고 빠르게 학습할 수 있습니다. 가장 큰 <strong>데이터 입력 병목 지점이 완벽히
+                                    해소</strong>됩니다.</li>
+                        </ul>
+                    </li>
+                    <li><strong>플레이 메타데이터 보조 결합</strong>
+                        <ul>
+                            <li><a href="https://www.kaggle.com/datasets/smeitoma/rainbow-six-siege-s5-ranked-dataset"
+                                    class="link-text" target="_blank">Kaggle R6 Siege Ranked Dataset</a> 의 승률/픽률 수치를 각
+                                도면과 짝지어 조건 텍스트로 보조 입력.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3안: 목표 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>3안. <span>레인보우 식스 시즈: 맵 자동 생성</span></h2>
+            </header>
+            <h3 class="subtitle">04. 최종 목표 (도면 제너레이터)</h3>
+            <div class="card">
+                <ul>
+                    <li>조건 입력: 목표로 하는 방어측 승률 49.8%, 소프트월(파괴 가능한 벽) 비율 30% 증가 등의 환경 지표를 UI를 통해 콘솔에 입력.</li>
+                    <li>파이프라인 가동: AI 생성 도구가 이미지 생성 &rarr; 검증 도구가 플레이 가능 여부 승인.</li>
+                    <li>최종 산출: 모든 검증을 마친 새로운 전술 맵 평면도 이미지가 출력되며, 핫스팟(교전 예상 구역)이 히트맵 형태로 도면 위에 투영되어
+                        시각적으로 나타남.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4안: 유저 평가 -->
+        <!-- ========================================== -->
+
+        <!-- 4안: 선정 이유 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>4안. <span>게임 유저 평가 요약 및 분석기 (RAG)</span></h2>
+            </header>
+            <h3 class="subtitle">01. 선정 이유</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>라이브 서비스 게임의 생명줄, 초기 대응 속도</strong>
+                        <ul>
+                            <li>각종 커뮤니티(아카라이브, 디시인사이드, 인벤, 레딧)에서 쏟아지는 수만 건의 피드백을 인간 운영진이 실시간으로 개별 분석하는 것은 불가능합니다.</li>
+                        </ul>
+                    </li>
+                    <li><strong>단순 감성 분석을 넘은 '인과 분석'</strong>
+                        <ul>
+                            <li>기존의 긍정/부정(Positive/Negative) 그래프만 띄워주는 감성 분석 툴은 실무적 가치가 낮습니다.</li>
+                            <li>왜 부정적인가? <em>"이번에 신규 도입된 B 강화 시스템의 재화 소요량이 기존 무과금 기준선(천장)을 침해했기 때문"</em>이라는, 게임 고유의 지식
+                                기반 분석이 운영진에게 필요합니다.</li>
+                        </ul>
+                    </li>
+                    <li><strong>숨겨진 감정 찾기</strong>
+                        <ul>
+                            <li>유저들은 부정적, 긍정적 요소를 직접적으로 표현하기도 하나, 그 외에도 다양한 요소가 유저에 표현에서 확인됩니다. "수익이 줄었다", "이제는 꿀이 아니다"
+                                같은 비수사적 표현으로도 유저들의 감정을 확인할 수 있어야합니다.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4안: 구현 검증 (RAG 구조) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>4안. <span>게임 유저 평가 요약 및 분석기 (RAG)</span></h2>
+            </header>
+            <h3 class="subtitle">02-1. 구현 검증 (RAG 파이프라인 아키텍처)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>RAG (Retrieval-Augmented Generation, 검색 증강 생성) 핵심</strong>
+                        <ul>
+                            <li>LLM(대형 언어 모델)의 고질적 환각(Hallucination)을 막기 위해, LLM에 질문을 던지기 전 <strong>'정답 참고서'</strong>를
+                                쥐어주는 기술.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Vector Database 구축 (지식의 수치화)</strong>
+                        <ul>
+                            <li>대상 게임의 과금 모델(BM) 기획서, 캐릭터 상성표, 패치노트 전문을 임베딩(Embedding) 모델 처리를 거쳐 벡터 형태로
+                                <code>ChromaDB</code>나 <code>Pinecone</code> 같은 벡터 데이터베이스에 저장합니다.
+                            </li>
+                            <li>크롤링된 유저의 불만 글의 문맥 유사도를 비교해 해당 DB에서 가장 관련 깊은 게임 시스템 정보를 먼저 검색(Retrieval)해 엮습니다.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4안: 구현 검증 (은어 이해 방안) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>4안. <span>게임 유저 평가 요약 및 분석기 (RAG)</span></h2>
+            </header>
+            <h3 class="subtitle">02-2. 구현 검증 (커뮤니티 은어 이해 방안: RAG vs 파인튜닝)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>전문 용어 및 밈(Meme) 언어 장벽 해소</strong>
+                        <ul>
+                            <li>"혜자다", "천장 쳤다", "사료 좀 뿌려라" 같은 국내 게임 커뮤니티 특유의 은어 속뜻을 정확하게 파악해야 완벽한 인과 분석이 가능합니다.</li>
+                        </ul>
+                    </li>
+                    <li><strong>접근법 1: 도메인 어댑테이션 (LoRA 파인튜닝)</strong>
+                        <ul>
+                            <li>은어 말뭉치를 구축해 LLM 자체에 학습시키는 방식으로, 모델이 게임 특유의 화법과 뉘앙스를 스스로 체화하도록 만듭니다.</li>
+                        </ul>
+                    </li>
+                    <li><strong>접근법 2: 은어 사전 기반 RAG 활용 (유연한 대체 방안)</strong>
+                        <ul>
+                            <li>신규 밈이 실시간으로 쏟아지는 커뮤니티 특성상 매번 모델을 재학습하는 것은 비효율적일 수 있습니다.</li>
+                            <li>이를 극복하기 위해 <strong>'실시간 커뮤니티 은어 사전'</strong>을 DB에 저장하고, 유저 텍스트 내 특정 단어 발견 시 RAG로 그 뜻을
+                                검색하여 LLM에 프롬프트로 쥐어주는 방식(지식 주입)이 훨씬 유지보수에 유리하고 직관적입니다.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4안: 데이터셋 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>4안. <span>게임 유저 평가 요약 및 분석기 (RAG)</span></h2>
+            </header>
+            <h3 class="subtitle">03. 데이터셋 확보 방안 (난이도: 중)</h3>
+            <div class="card">
+                <ul>
+                    <li><strong>사전 지식(Knowledge Base) 데이터셋</strong>
+                        <ul>
+                            <li>나무위키 게임 정보 덤프 크롤링, 개발사 공식 시스템 가이드 웹페이지, 고객센터 FAQ 데이터 등을 스크래핑.</li>
+                        </ul>
+                    </li>
+                    <li><strong>사용자 리뷰 크롤러 데이터셋</strong>
+                        <ul>
+                            <li><a href="https://www.kaggle.com/datasets/jiashenliu/multidecade-video-game-review-dataset"
+                                    class="link-text" target="_blank">Kaggle Steam Game Review Dataset</a> 등을 초기 감성분석
+                                베이스로 사용.</li>
+                            <li><strong>실시간 웹 크롤러:</strong> Python <code>Selenium</code>, <code>BeautifulSoup</code>를
+                                파이프라인으로 구성, 지정 날짜마다 커뮤니티 주요 게시판의 페이징(Paging)을 순회하며 본문과 댓글 텍스트 자동 수거 배치(Batch) 작업 수행.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4안: 목표 -->
+        <div class="slide content-slide">
+            <header>
+                <h2>4안. <span>게임 유저 평가 요약 및 분석기 (RAG)</span></h2>
+            </header>
+            <h3 class="subtitle">04. 최종 목표 (지능형 리포트 대시보드)</h3>
+            <div class="card">
+                <ul>
+                    <li>운영진 시점의 컨트롤 패널(Web UI)을 제작하여 대상 날짜를 범위 설정 후 '인사이트 생성' 트리거 클릭.</li>
+                    <li><strong>대시보드 출력 결과물:</strong>
+                        <ol>
+                            <li>시간대별 여론 긍정/부정 트렌드 차트 (감성 분석)</li>
+                            <li>자동 클러스터링 기반 '핵심 이슈 키워드 워드클라우드' (예: "서버 다운", "무기 강화비")</li>
+                            <li><strong>[핵심 기능] AI 생성 리포트:</strong> "최근 불만의 메인 이슈는 A 캐릭터 너프 조치입니다. 이는 기존 유저가 A 캐릭터 육성을
+                                위해 지불했던 기댓값 대비 상실감이 크기 때문인 것으로 분석됩니다" 형태의 줄글 브리핑 문서 산출.</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 슬라이드 마지막: 결론 (표지 그대로 둠) -->
+        <div class="slide content-slide">
+            <header>
+                <h2>결론. <span>종합 요약 및 추천 제안</span></h2>
+            </header>
+
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>구분</th>
+                                <th>1안 (시나리오 마인드맵)</th>
+                                <th>2안 (경주 시뮬레이터)</th>
+                                <th>3안 (맵 자동 생성기)</th>
+                                <th>4안 (유저 동향 요약기)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>핵심 기술</strong></td>
+                                <td>LLM 데이터 추출 + 그래프 시각화</td>
+                                <td>회귀 ML(예측) + 지능형 시뮬레이션</td>
+                                <td>PCG-ML / 디퓨전형 생성 AI</td>
+                                <td>실시간 크롤링 + 사전 지식 RAG + LLM</td>
+                            </tr>
+                            <tr>
+                                <td><strong>데이터 난이도</strong></td>
+                                <td><span class="highlight">하 (가장 쉬움)</span></td>
+                                <td>중상 (도메인 전환 전처리 필요)</td>
+                                <td><span class="highlight">중 (색상 어노테이션 작업만 수행하면 됨)</span></td>
+                                <td>중 (크롤러 유지보수)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>실현 가능성</strong></td>
+                                <td><span class="highlight">매우 높음</span></td>
+                                <td>높음 (데이터 튜닝만 성공한다면 파급력 높음)</td>
+                                <td><span class="highlight">높음 (병목 해소됨)</span></td>
+                                <td><span class="highlight">매우 높음</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>추천 랭크</strong></td>
+                                <td><span class="highlight">강력 추천 (과제 목적 부합)</span></td>
+                                <td>과제보다 상용화 아이디어로 훌륭함</td>
+                                <td><span class="highlight">도전적이고 혁신적인 과제로 급부상</span></td>
+                                <td><span class="highlight">가장 추천 (실무적 가치 1위)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" title="이전 슬라이드 (←)">&larr;</button>
+        <button class="btn" id="nextBtn" title="다음 슬라이드 (→)">&rarr;</button>
+    </div>
+
+    <!-- Slide Counter overlay in top right -->
+    <div
+        style="position:fixed; top:2rem; right:3rem; z-index:100; font-size: 1.2rem; color: var(--text-muted); font-variant-numeric: tabular-nums;">
+        <span id="currentSlideNum">1</span> / <span id="totalSlideNum">X</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentSlideNum = document.getElementById('currentSlideNum');
+            const totalSlideNum = document.getElementById('totalSlideNum');
+            const progressBar = document.getElementById('progressBar');
+
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+            totalSlideNum.textContent = totalSlides;
+
+            function updateSlides() {
+                slides.forEach((slide, index) => {
+                    if (index === currentSlide) {
+                        slide.classList.add('active');
+                        slide.style.opacity = 1;
+                        slide.style.pointerEvents = 'auto';
+                        slide.style.zIndex = 10;
+                        slide.style.transform = 'translateY(0)';
+                    } else {
+                        slide.classList.remove('active');
+                        slide.style.opacity = 0;
+                        slide.style.pointerEvents = 'none';
+                        slide.style.zIndex = 1;
+                        // Optional direction logic for transitions
+                        if (index < currentSlide) {
+                            slide.style.transform = 'translateY(-20px)';
+                        } else {
+                            slide.style.transform = 'translateY(20px)';
+                        }
+                    }
+                });
+
+                // Update controls
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+                currentSlideNum.textContent = currentSlide + 1;
+
+                // Update progress bar
+                const progress = ((currentSlide + 1) / totalSlides) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlides();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlides();
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
+                    if (currentSlide < totalSlides - 1) {
+                        currentSlide++;
+                        updateSlides();
+                    }
+                } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                    if (currentSlide > 0) {
+                        currentSlide--;
+                        updateSlides();
+                    }
+                }
+            });
+
+            // Init
+            updateSlides();
+        });
+    </script>
+</body>
+
+</html>

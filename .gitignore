@@ -1,0 +1,30 @@
+# Libraries and dependencies
+node_modules/
+venv/
+.venv/
+dist/
+build/
+.dart_tool/
+.packages
+
+# Databases and runtime data
+chroma_data/
+__pycache__/
+
+# Model checkpoints and caches
+model_cache/
+*_sft_lora/
+*_sft_optimized/
+*.gguf
+temp_merged*/
+
+# Logs and environment files
+*.log
+.env
+.env.*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

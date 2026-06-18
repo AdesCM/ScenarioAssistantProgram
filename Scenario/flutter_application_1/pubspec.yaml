@@ -1,0 +1,40 @@
+name: flutter_application_1
+description: "A new Flutter project."
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  # sdk 버전을 수정했습니다. ^3.9.2는 존재하지 않는 버전일 수 있어 일반적인 버전으로 변경합니다.
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # provider와 uuid를 이곳에 추가합니다.
+  provider: ^6.1.2
+  uuid: ^4.4.0
+
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  flutter_lints: ^4.0.0 # 버전을 sdk에 맞게 조정했습니다.
+
+flutter:
+  uses-material-design: true
+
+  # 이 부분의 중복된 dependencies를 삭제했습니다.
+  # assets, fonts 등 flutter 관련 설정만 남깁니다.
+
+  # assets:
+  #   - images/a_dot_burr.jpeg
+
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf

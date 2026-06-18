@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma를 Flutter 앱으로: 개발 과정 발표 (스크롤 버전)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 각 슬라이드(섹션) 스타일 */
+        .slide-section {
+            /* display: block; /* 이제 항상 보이도록 */
+            min-height: 70vh; /* 높이는 유지하여 구분 */
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem; /* 슬라이드 간 간격 */
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            position: relative; /* 슬라이드 번호 위치 기준 */
+        }
+         .slide-number {
+             position: absolute;
+             top: 0.75rem;
+             right: 1rem;
+             font-size: 0.875rem;
+             color: #9ca3af;
+             font-weight: bold;
+         }
+        /* 코드 블록 스타일 */
+        pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            overflow-x: auto;
+            font-size: 0.875rem; /* 14px */
+            line-height: 1.25rem; /* 20px */
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        code {
+            font-family: monospace;
+        }
+        /* 이미지 컨테이너 스타일 */
+        .image-container {
+            background-color: #f9fafb; /* 약간 밝은 배경 */
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            border-radius: 0.375rem;
+            overflow: hidden; /* 이미지가 넘치지 않도록 */
+        }
+        .image-container img {
+             max-width: 100%;
+             max-height: 100%;
+             object-fit: scale-down; /* 이미지가 잘리지 않도록 비율 유지하며 축소 */
+        }
+        /* 제목 스타일 조정 */
+         .slide-title {
+            padding-right: 2.5rem; /* 슬라이드 번호 공간 확보 */
+         }
+    </style>
+    <!-- Chosen Palette: Minimal Light with Neutral Tones -->
+    <!-- Application Structure Plan: Linear vertical scrolling structure. Each major section of the report outline becomes a distinct scrollable section. Navigation is via standard page scrolling. This structure provides a quick overview and easy reading of all content at once. -->
+    <!-- Visualization & Content Choices: Content from the Markdown outline is presented using standard HTML elements (headings, lists, paragraphs, code blocks). Actual image references (`<img>`) used where available. No interactive charts are needed for this presentation format. Goal: Inform -> Method: Static Text/Code/Images -> Interaction: Scrolling -> Justification: Provides a straightforward, consolidated view of the presentation content. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Figma를 Flutter 앱으로: 개발 과정 발표 (스크롤 버전)</h1>
+
+        <!-- Slides Container -->
+        <div id="slides-container">
+            <!-- Slide 1: Title -->
+            <div id="slide-1" class="slide-section flex flex-col items-center justify-center text-center">
+                 <span class="slide-number">1 / 15</span>
+                <h2 class="text-4xl font-bold mb-4 slide-title">Figma 디자인에서 살아있는 Flutter 앱으로</h2>
+                <p class="text-2xl mb-2">세계관 편집기 개발 여정</p>
+                <p class="text-xl text-gray-600 mb-8">Figma to Flutter 변환, 기능 구현, 그리고 디버깅 경험 공유</p>
+                <div class="w-full max-w-md h-40 image-container mt-4">
+                     <img src="https://placehold.co/400x160/cccccc/ffffff?text=Figma+%2B+Flutter" alt="Figma와 Flutter 로고 연결 이미지" onerror="this.onerror=null; this.src='https://placehold.co/400x160/cccccc/ffffff?text=Image+Not+Found';">
+                </div>
+                <p class="mt-8 text-lg">발표자: (발표자 이름)</p>
+                <p class="text-lg text-gray-500">2025년 10월 26일</p>
+            </div>
+
+            <!-- Slide 2: Project Goals -->
+            <div id="slide-2" class="slide-section">
+                <span class="slide-number">2 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">프로젝트 목표 소개</h2>
+                <p class="mb-2"><strong>목표:</strong> Figma 디자인 UI → 동적 Flutter 앱 구현</p>
+                <p class="mb-4"><strong>핵심 기능:</strong></p>
+                <ul class="list-disc list-inside space-y-1 mb-4">
+                    <li>세계관, 캐릭터, 플롯, 장소 데이터 CRUD</li>
+                    <li>데이터 요소 간 관계 설정 (태그 시스템)</li>
+                    <li>이미지 첨부 및 관리</li>
+                    <li>Windows 데스크톱 앱으로 빌드</li>
+                </ul>
+                <div class="flex justify-center mt-6">
+                 <div class="w-full max-w-lg h-52 image-container">
+                     <!-- 최종 앱 메인 화면 이미지 (가정) -->
+                     <img src="https://placehold.co/600x300/cccccc/ffffff?text=Final+App+Screenshot" alt="앱 메인 화면 또는 태그 기능 스크린샷" onerror="this.onerror=null; this.src='https://placehold.co/600x300/cccccc/ffffff?text=Image+Not+Found';">
+                 </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Starting Point -->
+            <div id="slide-3" class="slide-section">
+                <span class="slide-number">3 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">시작점 - Figma to Flutter 플러그인 활용</h2>
+                 <p class="mb-2"><strong>초기 작업:</strong> Figma 디자인 → Flutter 코드 자동 변환</p>
+                 <p class="mb-1">사용한 플러그인: Figma to Flutter (플러그인)</p>
+                 <p class="mb-4"><strong>결과:</strong> 정적 UI 레이아웃 코드 확보 (StatelessWidget 위주)</p>
+                 <p class="mb-2">디자인 요소(색상, 폰트, 배치) 반영</p>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="h-60 image-container">
+                        <!-- Figma 메인 화면 스크린샷 -->
+                        <img src="https://placehold.co/400x240/cccccc/ffffff?text=image_fdea97.png" alt="Figma 메인 디자인 (image_fdea97.png)" onerror="this.onerror=null; this.src='https://placehold.co/400x240/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                    <div class="h-60 image-container bg-gray-800 text-white p-2 text-left text-xs overflow-auto">
+                        <pre><code class="language-dart">// 초기 생성 코드 예시 (실제 코드 아님)
+import 'package:flutter/material.dart';
+
+class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // ... 많은 Positioned 위젯들 ...
+    );
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Slide 4: Limitations -->
+            <div id="slide-4" class="slide-section">
+                <span class="slide-number">4 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">초기 코드의 한계점</h2>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong>정적인 UI:</strong> 화면 전환 X, 버튼 등 상호작용 불가</li>
+                    <li><strong>데이터 부재:</strong> 실제 데이터 저장/관리 기능 없음 ('홍길동전'은 단순 텍스트)</li>
+                    <li><strong>확장성 부족:</strong> 새로운 데이터 추가/수정 불가</li>
+                </ul>
+                 <p class="font-semibold text-lg mb-4">결론: 디자인만 반영, 실제 앱 로직은 전무</p>
+                 <div class="flex justify-center mt-6">
+                    <div class="w-full max-w-md h-40 image-container relative">
+                        <!-- 초기 앱 실행 화면 (상호작용 안됨 강조) -->
+                        <img src="https://placehold.co/400x160/cccccc/ffffff?text=Initial+Static+UI" alt="클릭해도 반응 없는 초기 앱 스크린샷" onerror="this.onerror=null; this.src='https://placehold.co/400x160/cccccc/ffffff?text=Image+Not+Found';">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                            <span class="text-white text-4xl font-bold">🚫</span>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Slide 5: Req 1 -->
+            <div id="slide-5" class="slide-section">
+                 <span class="slide-number">5 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">요구사항 1: 동적 데이터 관리 및 화면 이동</h2>
+                 <p class="mb-4"><strong>요청 내용:</strong></p>
+                 <ul class="list-disc list-inside space-y-1 mb-4">
+                    <li>정적 데이터 → 실제 관리 가능한 데이터 구조 변경</li>
+                    <li>사용자 추가/삭제 기능 구현</li>
+                    <li>목록 → 상세 화면 이동 기능 구현</li>
+                </ul>
+                 <div class="flex justify-center mt-6">
+                     <div class="w-full max-w-lg h-52 image-container">
+                        <!-- 플로우차트 이미지 -->
+                         <img src="https://placehold.co/600x300/cccccc/ffffff?text=C077036+차현민.jpg" alt="화면 이동 플로우차트 (C077036 차현민.jpg)" onerror="this.onerror=null; this.src='https://placehold.co/600x300/cccccc/ffffff?text=Image+Not+Found';">
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Slide 6: Impl 1 -->
+            <div id="slide-6" class="slide-section">
+                 <span class="slide-number">6 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">구현 1: Provider 상태 관리와 네비게이션</h2>
+                <p class="mb-2"><strong>핵심 기술:</strong> <code>Provider</code> 패키지</p>
+                <p class="mb-2"><strong>데이터 모델링:</strong> <code>Universe</code>, <code>Character</code> 등 클래스</p>
+                <p class="mb-4"><strong>화면 이동:</strong> <code>routes</code>, <code>Navigator.pushNamed</code></p>
+                 <p class="font-semibold mb-2">코드 예시:</p>
+                <pre><code class="language-dart">// main.dart - Provider 설정
+ChangeNotifierProvider(
+  create: (ctx) => UniverseProvider(),
+  child: MaterialApp(
+    home: const MainScreen(),
+    routes: { // 명명된 라우트 정의
+      UniverseScreen.routeName: (ctx) => const UniverseScreen(), // ...
+    },
+  ),
+);
+
+// provider/universe_provider.dart
+class UniverseProvider with ChangeNotifier {
+  List&lt;Universe&gt; _universes = [ ... ];
+  void addUniverse() { /* ... */ notifyListeners(); }
+}</code></pre>
+                 <div class="flex justify-center mt-4">
+                    <div class="w-full max-w-sm h-32 image-container">
+                        <img src="https://placehold.co/384x128/cccccc/ffffff?text=Provider+Diagram" alt="Provider 아키텍처 다이어그램" onerror="this.onerror=null; this.src='https://placehold.co/384x128/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Slide 7: Req 2 -->
+            <div id="slide-7" class="slide-section">
+                 <span class="slide-number">7 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">요구사항 2: 상세 정보 편집 (CRUD)</h2>
+                 <p class="mb-4"><strong>요청 내용:</strong> Key-Value 형태의 유연한 요소 편집 UI 구현</p>
+                 <ul class="list-disc list-inside space-y-1 mb-4">
+                     <li>각 요소(Key-Value) 자유롭게 추가/수정/삭제</li>
+                     <li>초기: 단순 텍스트 → 목표: 이미지와 같은 유연한 UI</li>
+                 </ul>
+                 <div class="flex justify-center mt-6">
+                     <div class="w-full max-w-xl h-60 image-container">
+                        <!-- Key-Value 편집 UI 스크린샷 -->
+                         <img src="https://placehold.co/600x240/cccccc/ffffff?text=image_d6ecd9.png" alt="Key-Value 편집 UI (image_d6ecd9.png)" onerror="this.onerror=null; this.src='https://placehold.co/600x240/cccccc/ffffff?text=Image+Not+Found';">
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Slide 8: Impl 2 -->
+            <div id="slide-8" class="slide-section">
+                 <span class="slide-number">8 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">구현 2: 동적 UI 및 Provider 메서드 확장</h2>
+                 <p class="mb-2"><strong>데이터 구조:</strong> <code>Map&lt;String, String&gt; details</code> 활용</p>
+                 <p class="mb-2"><strong>Provider 확장:</strong> <code>updateCharacter</code> 등 메서드 구현</p>
+                 <p class="mb-4"><strong>UI 구현:</strong> <code>StatefulWidget</code>, <code>TextEditingController</code> 리스트, <code>ListView.builder</code></p>
+                 <p class="font-semibold mb-2">코드 예시:</p>
+                 <pre><code class="language-dart">// screens/character_detail_screen.dart - 동적 리스트 UI
+ListView.builder(
+  itemCount: _keyControllers.length,
+  itemBuilder: (ctx, index) {
+    return Row(
+      children: [
+        TextFormField(controller: _keyControllers[index]),
+        TextFormField(controller: _valueControllers[index]),
+        IconButton(icon: Icon(Icons.remove_circle_outline), onPressed: () => _removeElement(index)),
+      ],
+    );
+  },
+);
+
+// provider/universe_provider.dart - 데이터 업데이트
+void updateCharacter(String universeId, Character updatedCharacter) {
+  // ... 캐릭터 교체 ...
+  notifyListeners();
+}</code></pre>
+            </div>
+
+             <!-- Slide 9: Req 3 -->
+            <div id="slide-9" class="slide-section">
+                 <span class="slide-number">9 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">요구사항 3: 이미지 관리</h2>
+                 <p class="mb-4"><strong>요청 내용:</strong></p>
+                 <ul class="list-disc list-inside space-y-1 mb-4">
+                    <li>대표 이미지 표시</li>
+                    <li>갤러리에서 이미지 선택 및 교체 기능</li>
+                 </ul>
+                 <div class="flex justify-center mt-6">
+                    <div class="w-full max-w-xl h-60 image-container">
+                        <!-- 이미지 포함된 상세 화면 레이아웃 -->
+                        <img src="https://placehold.co/600x240/cccccc/ffffff?text=image_d6ec60.jpg" alt="이미지 포함된 상세 화면 (image_d6ec60.jpg)" onerror="this.onerror=null; this.src='https://placehold.co/600x240/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Slide 10: Impl 3 -->
+            <div id="slide-10" class="slide-section">
+                 <span class="slide-number">10 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">구현 3: <code>image_picker</code> 활용</h2>
+                <p class="mb-2"><strong>핵심 기술:</strong> <code>image_picker</code> 패키지</p>
+                <p class="mb-4"><strong>구현:</strong> 의존성 추가, 모델 <code>imageUrl</code> 필드, 2단 레이아웃, <code>_pickImage</code>, <code>_buildImageWidget</code></p>
+                 <p class="font-semibold mb-2">코드 예시:</p>
+                <pre><code class="language-dart">// models/character.dart - 선택적 imageUrl
+Character({ /* ..., */ String? imageUrl })
+  : imageUrl = imageUrl ?? '기본_이미지_URL';
+
+// screens/character_detail_screen.dart - 이미지 선택 함수
+Future&lt;void&gt; _pickImage() async {
+  final picker = ImagePicker();
+  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    setState(() { _pickedImage = File(pickedFile.path); });
+  }
+}</code></pre>
+                <div class="flex justify-center mt-4">
+                  <div class="w-full max-w-lg h-40 image-container">
+                      <!-- 이미지가 표시된 실제 앱 상세 화면 스크린샷 -->
+                     <img src="https://placehold.co/600x160/cccccc/ffffff?text=Detail+Screen+with+Image" alt="이미지가 표시된 상세 화면 스크린샷" onerror="this.onerror=null; this.src='https://placehold.co/600x160/cccccc/ffffff?text=Image+Not+Found';">
+                  </div>
+                </div>
+            </div>
+
+            <!-- Slide 11: Req 4 -->
+            <div id="slide-11" class="slide-section">
+                 <span class="slide-number">11 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">요구사항 4: '태그' 요소 타입 추가</h2>
+                <p class="mb-4"><strong>요청 내용:</strong></p>
+                 <ul class="list-disc list-inside space-y-1 mb-4">
+                    <li>데이터 간 연결 '태그' 기능</li>
+                    <li>태그 클릭 시 해당 데이터 상세 페이지로 이동</li>
+                    <li>태그 추가 시 새 데이터 생성 기능</li>
+                 </ul>
+                <div class="flex justify-center mt-6">
+                   <div class="w-full max-w-xl h-60 image-container">
+                       <!-- 태그 UI 포함된 플롯 상세 화면 -->
+                       <img src="https://placehold.co/600x240/cccccc/ffffff?text=image_f7c37c.jpg" alt="태그 UI 포함된 플롯 상세 화면 (image_f7c37c.jpg)" onerror="this.onerror=null; this.src='https://placehold.co/600x240/cccccc/ffffff?text=Image+Not+Found';">
+                   </div>
+                </div>
+            </div>
+
+             <!-- Slide 12: Impl 4 -->
+            <div id="slide-12" class="slide-section">
+                 <span class="slide-number">12 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">구현 4: 데이터 구조 변경 및 컴포넌트화</h2>
+                <p class="mb-2"><strong>데이터 구조 변경:</strong> <code>TagType</code> Enum, <code>TagLink</code> 모델, JSON 문자열 저장</p>
+                <p class="mb-4"><strong>컴포넌트 분리:</strong> <code>ElementRenderer</code>, <code>TextElementWidget</code>, <code>TagElementWidget</code>, <code>AddTagDialog</code></p>
+                 <p class="font-semibold mb-2">코드 예시:</p>
+                 <pre><code class="language-dart">// provider/universe_provider.dart - TagLink 모델
+class TagLink { /* id, linkedItemId, displayName, type */ }
+
+// provider/universe_provider.dart - details 예시 (JSON 문자열)
+'참여 캐릭터': jsonEncode([ TagLink(...).toJson() ]),
+
+// widgets/element_renderer.dart - 렌더링 분기 로직
+try {
+  var decodedValue = jsonDecode(valueController.text);
+  if (decodedValue is List /* ... */) { // TagLink 리스트인지 확인
+    return TagElementWidget(...); // 태그 편집기
+  }
+} catch (e) { /* ... */ }
+return TextElementWidget(...); // 텍스트 편집기</code></pre>
+                 <div class="flex justify-center mt-4">
+                    <div class="w-full max-w-lg h-40 image-container">
+                        <!-- 실제 앱의 태그 요소 편집 UI 스크린샷 -->
+                       <img src="https://placehold.co/600x160/cccccc/ffffff?text=Tag+Editing+UI+Screenshot" alt="태그 요소 편집 UI 스크린샷" onerror="this.onerror=null; this.src='https://placehold.co/600x160/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                 </div>
+            </div>
+
+             <!-- Slide 13: Errors 1 -->
+            <div id="slide-13" class="slide-section">
+                 <span class="slide-number">13 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">주요 발생 오류 및 해결 (1/2)</h2>
+                 <ul class="list-disc list-inside space-y-3 mb-4">
+                    <li><strong>의존성 오류:</strong> <code>pubspec.yaml</code> 패키지 누락 → <code>flutter pub get</code></li>
+                     <li><strong>YAML 들여쓰기 오류:</strong> <code>dependencies:</code> 위치 → 올바른 레벨로 수정</li>
+                     <li><strong>Import 오류:</strong> <code>package.flutter</code> → <code>package:flutter</code> (콜론 사용)</li>
+                     <li><strong>VS Code 작업 공간 오류:</strong> 하위 폴더 열기 → 프로젝트 루트 폴더 열기</li>
+                 </ul>
+                 <div class="flex justify-center mt-6">
+                    <div class="w-full max-w-md h-32 image-container">
+                        <!-- VS Code 작업 공간 오류 스크린샷 -->
+                        <img src="https://placehold.co/400x128/cccccc/ffffff?text=image_8bb257.png" alt="VS Code 작업 공간 오류 (image_8bb257.png)" onerror="this.onerror=null; this.src='https://placehold.co/400x128/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Slide 14: Errors 2 -->
+            <div id="slide-14" class="slide-section">
+                 <span class="slide-number">14 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">주요 발생 오류 및 해결 (2/2)</h2>
+                <ul class="list-disc list-inside space-y-3 mb-4">
+                    <li><strong>상태 관리/빌드 오류:</strong>
+                        <ul class="list-circle list-inside ml-4">
+                            <li><code>LateInitializationError</code> (<code>_tags</code>) → 즉시 초기화 (<code>= []</code>)</li>
+                            <li><code>ChangeNotifier</code> 오류 → <code>with ChangeNotifier</code>, 분석 서버 재시작</li>
+                            <li>다른 드라이브 빌드 오류 → 프로젝트 C: 이동, <code>flutter clean</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Flutter 규칙/Lint 오류:</strong> <code>const</code>, <code>key</code> 누락 → 자동 수정(Quick Fix) 활용</li>
+                    <li><strong>위젯 매개변수 오류:</strong> <code>Chip</code>의 <code>onPressed</code> 부재 → <code>InputChip</code> 사용</li>
+                    <li><strong>UI 멈춤:</strong> <code>build</code> 내 필터링 → 로직 분리(<code>_filterElements</code>), 상태 변수 사용</li>
+                </ul>
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div class="h-32 image-container">
+                        <img src="https://placehold.co/300x128/cccccc/ffffff?text=Quick+Fix+Icon" alt="VS Code Quick Fix (전구) 아이콘" onerror="this.onerror=null; this.src='https://placehold.co/300x128/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                    <div class="h-32 image-container">
+                         <img src="https://placehold.co/300x128/cccccc/ffffff?text=Frozen+UI" alt="UI 멈춤 현상 이미지" onerror="this.onerror=null; this.src='https://placehold.co/300x128/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Slide 15: Conclusion -->
+            <div id="slide-15" class="slide-section">
+                 <span class="slide-number">15 / 15</span>
+                <h2 class="text-2xl font-bold mb-4 slide-title">결론 및 현황</h2>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong>결과:</strong> Figma 디자인 기반 + 주요 기능 프로토타입 완성</li>
+                    <li><strong>과정:</strong> Figma to Flutter는 시작점, 실제 로직 구현에는 Flutter 지식 필수</li>
+                    <li><strong>디버깅:</strong> 다양한 오류 해결하며 Flutter 개발 과정 학습</li>
+                    <li><strong>현황:</strong> 핵심 기능 구현, Windows 빌드 가능</li>
+                    <li><strong>향후 과제:</strong> UI 개선, 추가 기능, 테스트 등</li>
+                 </ul>
+                <div class="flex justify-center mt-6">
+                    <div class="w-full max-w-lg h-52 image-container">
+                        <!-- 최종 앱 메인 화면 스크린샷 -->
+                        <img src="https://placehold.co/600x300/cccccc/ffffff?text=Final+App+Screenshot+v2" alt="최종 앱 메인 화면 또는 태그 기능 화면" onerror="this.onerror=null; this.src='https://placehold.co/600x300/cccccc/ffffff?text=Image+Not+Found';">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 스크롤 버전에서는 네비게이션 버튼 제거 -->
+        <!-- <div class="flex justify-between mt-8"> ... </div> -->
+        <!-- 스크립트 제거 -->
+        <!-- <script> ... </script> -->
+
+    </div>
+
+</body>
+</html>

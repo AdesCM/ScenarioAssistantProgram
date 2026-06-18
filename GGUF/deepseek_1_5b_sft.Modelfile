@@ -1,0 +1,19 @@
+FROM ./deepseek_1_5b_sft.gguf
+
+# 추론용 핵심 파라미터 세팅
+PARAMETER temperature 0.2
+PARAMETER top_p 0.95
+PARAMETER repeat_penalty 1.1
+PARAMETER stop "<|im_end|>"
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|file_separator|>"
+
+# Qwen2.5/DeepSeek-R1 Chat Template 적용
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+"""
+
+SYSTEM "당신은 한국어 소설 시나리오 분석 및 설정 추출 전문가입니다. 주어진 텍스트에서 인물, 장소, 플롯 개체를 정밀하게 식별하고 구조화된 JSON 스크마 포맷을 준수하여 출력하십시오."

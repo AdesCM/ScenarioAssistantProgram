@@ -1,0 +1,25 @@
+=== 중간 발표 및 파인튜닝 전략 회의록 ===
+
+1. 문제 의식 (Why SFT?)
+- 상용 모델(Claude 3.5 Haiku)은 1930년대 소설에서 복잡한 JSON 스키마를 100% 준수하며 양질의 데이터를 추출함.
+- 반면, 로컬 소형 모델(Gemma4:26b)은 Zero-shot 환경에서 스키마 파괴 현상이 심각하며 (준수율 54%), 세부 정보 추출량도 현저히 떨어짐 (F1-Score 0.07).
+- 따라서 Claude가 추출한 1,419개의 양질의 데이터를 활용하여 Gemma를 파인튜닝(SFT)하기로 결정함.
+
+2. 데이터 파이프라인 (Data & Prompt Engineering)
+- 단순 추출 명령을 넘어, 프론트엔드 포맷(Record 기반 details)과 완벽히 호환되도록 강제하는 지시문(Instruction) 작성.
+- Claude가 뽑은 세부 속성 뎁스를 분석하여, Gemma가 학습 시 다음 항목들을 집중적으로 추출하도록 프롬프트 고도화 완료.
+  > Characters: physical_state, action, perception, vocalization, location_context
+  > Plots: inciting_incident, development, climax
+  > Locations: description, context, contents
+
+3. 파인튜닝 모델 세팅 (Hyperparameters)
+- LoRA Rank (r) = 32
+  * 단순히 형태만 외우는 수준(r=8)을 넘어, "소설 맥락을 이해하고 인과관계를 추론하여 복잡한 JSON 구조로 변환하는" 새로운 논리력을 깊게 학습시키기 위해 충분히 높은 Rank 부여.
+- Target Modules = All Linear (q, k, v, o, gate, up, down_proj)
+  * Attention 모듈뿐만 아니라 모델의 지식이 응집된 MLP 레이어까지 전부 튜닝 범위에 포함. 이는 엄격한 JSON 구조 생성과 도메인 특화 어휘 해석에 압도적으로 유리한 세팅임.
+- Epochs = 4
+  * 1,400여 개의 데이터셋 사이즈를 고려할 때, 과적합(Overfitting)을 피하면서도 지정된 포맷을 완전히 숙지하게 만드는 최적의 반복 횟수(Sweet Spot).
+
+4. 기대 효과
+- 파인튜닝된 Gemma 모델은 외부 인터넷이나 유료 API 연결 없이도 로컬에서 빠르고 무료로 구동됨.
+- 클로드급의 추출 정확도와 포맷 준수율을 보여주면서, 웹 시나리오 어시스턴트에 실시간으로 연동 가능한 안정적인 백엔드 AI 엔진 역할 수행.

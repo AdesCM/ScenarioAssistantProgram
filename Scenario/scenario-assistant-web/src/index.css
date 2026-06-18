@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/* Tailwind v4: dark 모드를 html/documentElement에 .dark 클래스 추가 방식으로 작동하게 설정 */
+@variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-dark-bg: #0f172a;
+  --color-dark-panel: #1e293b;
+  --color-text-light: #f8fafc;
+}
+
+body {
+  @apply bg-white text-slate-900 font-sans antialiased;
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+/* 다크모드 body */
+body.dark-body,
+.dark body {
+  @apply bg-slate-950 text-slate-100;
+}
+
+#root {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+/* select 요소 텍스트 색상 명시 (브라우저 기본값 override) */
+select {
+  color: inherit;
+}
+
+ㄱ
